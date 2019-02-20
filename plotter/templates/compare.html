@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<style type="text/css" media="screen">
+table.blueTable {
+  border: 1px solid #1C6EA4;
+  background-color: #EEEEEE;
+  width: 25%;
+  text-align: left;
+  border-collapse: collapse;
+}
+table.blueTable td, table.blueTable th {
+  border: 1px solid #AAAAAA;
+  padding: 3px 2px;
+}
+table.blueTable tbody td {
+  font-size: 13px;
+}
+table.blueTable tr:nth-child(even) {
+  background: #D0E4F5;
+}
+table.blueTable thead {
+  background: #1C6EA4;
+  background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+  background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+  background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+  border-bottom: 2px solid #444444;
+}
+table.blueTable thead th {
+  font-size: 15px;
+  font-weight: bold;
+  color: #FFFFFF;
+  border-left: 2px solid #D0E4F5;
+}
+table.blueTable thead th:first-child {
+  border-left: none;
+}
+
+table.blueTable tfoot {
+  font-size: 14px;
+  font-weight: bold;
+  color: #FFFFFF;
+  background: #D0E4F5;
+  background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  border-top: 2px solid #444444;
+}
+table.blueTable tfoot td {
+  font-size: 14px;
+}
+table.blueTable tfoot .links {
+  text-align: right;
+}
+table.blueTable tfoot .links a{
+  display: inline-block;
+  background: #1C6EA4;
+  color: #FFFFFF;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+
+</style>
+
+
+
+<html lang="en">
+<html>
+<head>
+<title> Select Page </title>
+</head>
+
+<body>
+
+
+{% block testjava %}
+<script type="text/javascript">
+function httpGet(theUrl)
+{
+    if (window.XMLHttpRequest)
+    {// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {// code for IE6, IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+            
+            return xmlhttp.responseText;
+        }
+    }
+    xmlhttp.open("GET", theUrl, false );
+    xmlhttp.send();  
+    return xmlhttp.responseText;   
+};
+
+function RedrawPlot() {
+    var baseurl = window.location.origin;
+    var url = baseurl + "/plotter/compare/"
+    
+    {% for q in count %}      
+    
+    
+    var e = document.getElementById("sn_dropdown{{q}}");
+    var sn{{q}} = e.options[e.selectedIndex].value;
+    
+    var e = document.getElementById("bt_dropdown{{q}}");
+    var bt{{q}} = e.options[e.selectedIndex].value; 
+    
+    var e = document.getElementById("eln_dropdown{{q}}");
+    var eln{{q}} = e.options[e.selectedIndex].value;  
+
+    var e = document.getElementById("ptype_dropdown");
+    var ptype = e.options[e.selectedIndex].value;     
+    
+    url = url + sn{{q}} + bt{{q}} + eln{{q}}
+ 
+    {% endfor %}
+ 
+    document.getElementById("demo").innerHTML = url
+
+    var image_data = httpGet(url)
+    document.getElementById("image").src = image_data
+ 
+}
+
+</script>
+{% endblock %}
+<h2> Comparison Page </h2>
+<hr>
+
+
+<form name="plotform">
+<table class="blueTable">
+<thead>
+<tr>
+<th>S/N</th>
+<th>Band</th>
+<th>Element</th>
+<th>Plot Type</th>
+</tr>
+</thead>
+
+{% for q in count %}
+<tbody>
+<tr>
+<td><select id="sn_dropdown{{q}}" onchange="RedrawPlot()">
+    {% for pzt in all_pzts %}
+        <option value="{{ pzt.SN }}">{{ pzt.SN }}</option>
+    {% endfor %}
+</select></td>
+<td>
+<select id="bt_dropdown{{q}}" onchange="RedrawPlot()">   
+        <option value="L">Low</option>
+        <option value="H">High</option>
+</select></td>
+<td><select id="eln_dropdown{{q}}" onchange="RedrawPlot()">
+    {% for i in i|rjust:10 %}
+        <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+    {% endfor %}
+</select></td>
+<td><select id="ptype_dropdown" onchange="RedrawPlot()">
+    {% for p in ptype_list %}
+        <option value="{{ p }}">{{ p }}</option>
+    {% endfor %}
+</select></td>
+</tr>
+</tbody>
+{% endfor %}
+
+</table>
+
+
+
+
+
+</form>
+<p id="demo">test url</p>
+<hr>
+<img src="" id="image" name="image"/>
+
+</body>
+</html>
+
+

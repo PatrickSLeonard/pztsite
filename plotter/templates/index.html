@@ -1,0 +1,41 @@
+
+
+
+{% extends "base.html" %}
+
+
+
+
+{% block navtop %}
+    <ul>
+    {% for PZT in all_pzts %}
+        <li><a href="{{ PZT.SN }}">{{ PZT.SN }}</a></li>        
+    {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block content %}
+Hello World!
+
+<script>
+function myFunction() {
+  document.getElementById("demo").innerHTML = "Paragraph changed.";
+}
+</script>
+
+<h1>A Web Page</h1>
+<p id="demo">A Paragraph</p>
+<button type="button" onclick="myFunction()">Try it</button>
+
+<form name="myform" action="http://www.mydomain.com/myformhandler.cgi" method="POST">
+<div align="left">
+<select name="mydropdown" onchange="myFunc(this)">
+<option value="Milk">Fresh Milk</option>
+<option value="Cheese">Old Cheese</option>
+<option value="Bread">Hot Bread</option>
+</select>
+</div>
+{% endblock %}
+
+
+
