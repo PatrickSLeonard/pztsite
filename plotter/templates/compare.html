@@ -69,7 +69,7 @@ table.blueTable tfoot .links a{
 <title> Select Page </title>
 </head>
 
-<body>
+<body onload="RedrawPlot()">
 
 
 {% block testjava %}
@@ -162,11 +162,16 @@ function RedrawPlot() {
         <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
     {% endfor %}
 </select></td>
+
+{% if q == 0 %}
 <td><select id="ptype_dropdown" onchange="RedrawPlot()">
     {% for p in ptype_list %}
         <option value="{{ p }}">{{ p }}</option>
     {% endfor %}
-</select></td>
+</select>
+</td>
+{% endif %}
+
 </tr>
 </tbody>
 {% endfor %}
