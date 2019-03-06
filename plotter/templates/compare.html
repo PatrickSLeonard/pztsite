@@ -92,12 +92,15 @@ function RedrawPlot() {
     var e = document.getElementById("eln_dropdown{{q}}");
     var eln{{q}} = e.options[e.selectedIndex].value;  
 
-    var e = document.getElementById("ptype_dropdown");
-    var ptype = e.options[e.selectedIndex].value;     
     
-    url = url + sn{{q}} + bt{{q}} + eln{{q}}
+    url = url + sn{{q}} + bt{{q}} + eln{{q}} + "/"
  
     {% endfor %}
+
+    var e = document.getElementById("ptype_dropdown");
+    var ptype = e.options[e.selectedIndex].value;     
+    url = url + ptype
+
  
     document.getElementById("demo").innerHTML = url
     document.getElementById("image").src = url

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse, redirect
 # Create your views here.
 from plotter.models import PZT, Sweep
-from plotter.makeplots import plotobj
+from plotter.makeplots import plotobj, zconv
 import re
 
 def index(request):
@@ -36,18 +36,22 @@ def plot(request, sn):
     
 
 def imageview(request, estr):
+
+    po = plotobj()
+    ptype_list = zconv.plottypes()
     
-    matches = re.findall(r'([a-zA-Z]{2}[0-9]{4})([LH]{1})([0-9]{1})', estr)
+    matches = re.findall(r'([a-zA-Z]{2}[0-9]{4})([LH]{1})([0-9]{1})', estr)               
     
-    po = plotobj()    
-    
-    for m in matches:
+    for m in matches:        
         sn  = m[0]
         bt  = m[1]
         eln = m[2]
         print ( '***** Found: {} / {} / {}'.format(sn,bt,eln) )
         po.addsweep(sn=sn, bt=bt, eln=eln)
-        b64 = po.plot_b64('absplot')
+
+    plot_type = estr.split('/')[-1]
+    
+    b64 = po.plot(plot_type = plot_type, save_type = "b64", autoscale=True)
     
     response = HttpResponse(b64,content_type="image/png")
     return response
@@ -65,8 +69,8 @@ def testview(request, estr):
 # *********************************************   
 def html_compare (request, count): 
     count = int(count)
-    all_pzts = PZT.objects.all()     
-    ptype_list = ["absplot", "realplot", "swrplot"]    
+    all_pzts = PZT.objects.all()
+    ptype_list = zconv.plottypes()
     context = {'all_pzts': all_pzts, 'ptype_list': ptype_list, 'count': range(count)}   
     return render(request, 'compare.html', context=context)
 
