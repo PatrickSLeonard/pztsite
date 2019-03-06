@@ -74,32 +74,11 @@ table.blueTable tfoot .links a{
 
 {% block testjava %}
 <script type="text/javascript">
-function httpGet(theUrl)
-{
-    if (window.XMLHttpRequest)
-    {// code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp=new XMLHttpRequest();
-    }
-    else
-    {// code for IE6, IE5
-        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange=function()
-    {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200)
-        {
-            
-            return xmlhttp.responseText;
-        }
-    }
-    xmlhttp.open("GET", theUrl, false );
-    xmlhttp.send();  
-    return xmlhttp.responseText;   
-};
+
 
 function RedrawPlot() {
     var baseurl = window.location.origin;
-    var url = baseurl + "/plotter/compare/"
+    var url = baseurl + "/plotter/image/"
     
     {% for q in count %}      
     
@@ -121,10 +100,10 @@ function RedrawPlot() {
     {% endfor %}
  
     document.getElementById("demo").innerHTML = url
+    document.getElementById("image").src = url
+    
 
-    var image_data = httpGet(url)
-    document.getElementById("image").src = image_data
- 
+
 }
 
 </script>
@@ -185,7 +164,7 @@ function RedrawPlot() {
 </form>
 <p id="demo">test url</p>
 <hr>
-<img src="" id="image" name="image"/>
+<img id="image" name="image" src=""/>
 
 </body>
 </html>

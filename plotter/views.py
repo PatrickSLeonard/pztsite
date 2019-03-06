@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.shortcuts import HttpResponse
+from django.shortcuts import HttpResponse, redirect
 # Create your views here.
 from plotter.models import PZT, Sweep
 from plotter.makeplots import plotobj
@@ -34,37 +34,8 @@ def plot(request, sn):
     
     return render(request, 'plot.html', context = context)
     
-def html_image(request, sn, bt, eln, ptype):
 
-    if not ptype:
-        ptype = 'absplot'
-
-    po = plotobj()
-    po.addsweep(sn=sn, bt=bt, eln=eln)
-    b64 = po.plot_b64_raw(ptype)
-    
-    #b64 = gen_plot(sn=sn,eln=eln,band_type=bt, plot_str=ptype)
-    
-    context = {'sn': sn, 'bt': bt, 'eln': eln, 'ptype': ptype, 'img_str': b64}
-    return render(request, 'getimage.html', context = context)
-
-def b64_image(request, sn, bt, eln, ptype):
-
-    if not ptype:
-        ptype = 'absplot'
-
-    po = plotobj()
-    po.addsweep(sn=sn, bt=bt, eln=eln)
-    b64 = po.plot_b64_raw(ptype)
-    
-    #b64 = gen_plot(sn=sn,eln=eln,band_type=bt, plot_str=ptype)
-    
-    rstr = 'data:image/png;base64, {}'.format(b64)   
-    response = HttpResponse(rstr, content_type="image/png")  
-    return response
- 
-# THIS RETURNS A TAGGED base64 image string 
-def b64_compare(request, estr):
+def imageview(request, estr):
     
     matches = re.findall(r'([a-zA-Z]{2}[0-9]{4})([LH]{1})([0-9]{1})', estr)
     
@@ -76,33 +47,30 @@ def b64_compare(request, estr):
         eln = m[2]
         print ( '***** Found: {} / {} / {}'.format(sn,bt,eln) )
         po.addsweep(sn=sn, bt=bt, eln=eln)
-        b64 = po.plot_b64_raw('absplot')
-        #b64 = po.plot_b64('absplot')
-    rstr = 'data:image/png;base64, {}'.format(b64)   #for use with b64_raw
+        b64 = po.plot_b64('absplot')
     
-    
-    
-    #rstr = rs.format(b64)
-    #rstr = b64.read()
-    #rstr = b64
-    response = HttpResponse(rstr, content_type="image/png")  
+    response = HttpResponse(b64,content_type="image/png")
     return response
     
+    
+def testview(request, estr):
+
+    url_str = '/plotter/image/{}'.format(estr)
+    context = {'img_url': url_str}
+    return render(request, 'test.html', context=context)   
+
+
+# *********************************************
+# This view is for an HTML webpage containing javascript controls for comparing PZTs
+# *********************************************   
 def html_compare (request, count): 
     count = int(count)
-    #context = {'count': range(count)}
-    
     all_pzts = PZT.objects.all()     
     ptype_list = ["absplot", "realplot", "swrplot"]    
     context = {'all_pzts': all_pzts, 'ptype_list': ptype_list, 'count': range(count)}   
     return render(request, 'compare.html', context=context)
-    
-    #return HttpResponse("this is a string", content_type="text/plain")
-    #context = {'img_str': b64}
-    #
-    #return render(request, 'compare.html', context=context)
-    
-    
-    #return render(request, 'compare.html', context = context ) 
 
+def html_redir (request): 
+    print ('invalid url')
+    return redirect('/plotter/compare/1')
 

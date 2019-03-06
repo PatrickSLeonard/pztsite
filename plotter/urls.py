@@ -24,27 +24,19 @@ urlpatterns = [
     #http://127.0.0.1:8000/plotter/  
     path('', views.index, name='index'),   
     
-
-
-    #http://127.0.0.1:8000/plotter/compare/numeric
-    #re_path(r'^compare/(?P<int:count>[0-9]{1})', views.html_compare, name='html_compare'),    
+    #http://127.0.0.1:8000/plotter/compare/numeric     
     re_path(r'^compare/(?P<count>\d+)', views.html_compare, name='html_compare'), 
-  
-    #http://127.0.0.1:8000/plotter/compare/list_of_elements
-    re_path(r'^compare/(?P<estr>.*)', views.b64_compare, name='b64_compare'),   
-    
 
+    #http://127.0.0.1:8000/plotter/compare/<ANYTHING ELSE>
+    re_path(r'^compare/.*', views.html_redir, name='html_redir'), 
+
+    #http://127.0.0.1:8000/plotter/html/list_of_elements
+    re_path(r'^html/(?P<estr>.*)', views.testview, name='testview'),
+    
+    #http://127.0.0.1:8000/plotter/image//list_of_elements
+    re_path(r'^image/(?P<estr>.*)', views.imageview, name='imageview'),    
+    
 ]
-    #This URL pattern is redundant; same as compare/1
-    #http://127.0.0.1:8000/plotter/select
-    #path('select', views.select, name='select'),
 
-    #These patterns are no longer necessary (I think?)
-    #http://127.0.0.1:8000/plotter/XX1234
-    #re_path(r'(?P<sn>[a-zA-Z]{2}[0-9]{4}?)/$', views.plot, name='plot'), 
-    
-    #http://127.0.0.1:8000/plotter/XX1234/L/4/absplot
-    #re_path(r'^(?P<sn>[a-zA-Z]{2}[0-9]{4})/(?P<bt>[LH]{1})/(?P<eln>[0-9]{1})/(?P<ptype>.*)', views.html_image, name='html_image'),  
-    
-    #http://127.0.0.1:8000/plotter/image/XX1234/L/4/absplot
-    #re_path(r'^image/(?P<sn>[a-zA-Z]{2}[0-9]{4})/(?P<bt>[LH]{1})/(?P<eln>[0-9]{1})/(?P<ptype>.*)', views.b64_image, name='b64_image'),
+# Note: if I cared what the extra bits were I oan use:
+#   re_path(r'^compare/(.*)', views.html_redir, name='html_redir'), 

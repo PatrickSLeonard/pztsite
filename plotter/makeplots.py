@@ -98,7 +98,8 @@ class plotobj:
             image = BytesIO()
             fig.savefig(image, format="png")
             image.seek(0)
-            str = base64.b64encode(image.read())
+            #str = base64.b64encode(image.read())
+            str = image.read()
             plt.close()
             return str
             #return str.decode('utf8')      
