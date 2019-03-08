@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <style type="text/css" media="screen">
@@ -80,8 +81,8 @@ function RedrawPlot() {
     var baseurl = window.location.origin;
     var url = baseurl + "/plotter/image/"
     
-    {% for q in count %}      
-    
+        
+    {% for q in range %}
     
     var e = document.getElementById("sn_dropdown{{q}}");
     var sn{{q}} = e.options[e.selectedIndex].value;
@@ -90,7 +91,7 @@ function RedrawPlot() {
     var bt{{q}} = e.options[e.selectedIndex].value; 
     
     var e = document.getElementById("eln_dropdown{{q}}");
-    var eln{{q}} = e.options[e.selectedIndex].value;  
+    var eln{{q}} = e.options[e.selectedIndex].value - 1;
 
     
     url = url + sn{{q}} + bt{{q}} + eln{{q}} + "/"
@@ -126,7 +127,9 @@ function RedrawPlot() {
 </tr>
 </thead>
 
-{% for q in count %}
+
+
+{% for q in range %}
 <tbody>
 <tr>
 <td><select id="sn_dropdown{{q}}" onchange="RedrawPlot()">
@@ -145,7 +148,7 @@ function RedrawPlot() {
     {% endfor %}
 </select></td>
 
-{% if q == 0 %}
+{% if forloop.first %}
 <td><select id="ptype_dropdown" onchange="RedrawPlot()">
     {% for p in ptype_list %}
         <option value="{{ p }}">{{ p }}</option>
@@ -159,12 +162,12 @@ function RedrawPlot() {
 {% endfor %}
 
 </table>
-
-
-
-
-
 </form>
+
+<br>
+<a href='/plotter/compare/{{count|add:"1"}}'>ADD</a> | <a href='/plotter/compare/{{count|add:"-1"}}'>REMOVE</a>
+<br>
+
 <p id="demo">test url</p>
 <hr>
 <img id="image" name="image" src=""/>

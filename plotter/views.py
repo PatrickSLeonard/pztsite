@@ -45,7 +45,7 @@ def imageview(request, estr):
     for m in matches:        
         sn  = m[0]
         bt  = m[1]
-        eln = m[2]
+        eln = int(m[2])+1
         print ( '***** Found: {} / {} / {}'.format(sn,bt,eln) )
         po.addsweep(sn=sn, bt=bt, eln=eln)
 
@@ -71,7 +71,8 @@ def html_compare (request, count):
     count = int(count)
     all_pzts = PZT.objects.all()
     ptype_list = zconv.plottypes()
-    context = {'all_pzts': all_pzts, 'ptype_list': ptype_list, 'count': range(count)}   
+#    context = {'all_pzts': all_pzts, 'ptype_list': ptype_list, 'count': range(count)}   
+    context = {'all_pzts': all_pzts, 'ptype_list': ptype_list, 'count': count, 'range': range(count)}
     return render(request, 'compare.html', context=context)
 
 def html_redir (request): 

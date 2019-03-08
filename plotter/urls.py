@@ -25,8 +25,8 @@ urlpatterns = [
     path('', views.index, name='index'),   
     
     #http://127.0.0.1:8000/plotter/compare/numeric     
-    re_path(r'^compare/(?P<count>\d+)', views.html_compare, name='html_compare'), 
-
+    re_path(r'^compare/(?P<count>[1-9]+[0-9]*)', views.html_compare, name='html_compare'), 
+    
     #http://127.0.0.1:8000/plotter/compare/<ANYTHING ELSE>
     re_path(r'^compare/.*', views.html_redir, name='html_redir'), 
 

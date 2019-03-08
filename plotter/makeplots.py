@@ -13,8 +13,7 @@ from io import BytesIO, StringIO
 # zconv is a helper class containing functions for converting impedance traces to various related quantities
 # *******************************
 class zconv:
-
-    @staticmethod
+  
     def absplot():
         convfunc = np.abs
         ylim = [1, 100]        
@@ -22,7 +21,6 @@ class zconv:
         title = 'Magnitude'       
         return convfunc, ylim, ylabel, title
 
-    @staticmethod
     def realplot():
         convfunc = np.real
         ylim = [1, 100]        
@@ -30,7 +28,6 @@ class zconv:
         title = 'Real'       
         return convfunc, ylim, ylabel, title    
 
-    @staticmethod
     def imagplot():
         convfunc = np.imag
         ylim = [-50, 50]        
@@ -38,27 +35,12 @@ class zconv:
         title = 'Imaginary'       
         return convfunc, ylim, ylabel, title 
 
-
-    @staticmethod
     def swrplot():
         convfunc = zconv.swrcalc
         ylim = [1, 5]        
         ylabel = 'AU'
         title = 'SWR'       
         return convfunc, ylim, ylabel, title
-    
-    @staticmethod 
-    def plottypes():
-        return list(zconv.func_dict.keys())       
-  
-    @staticmethod  
-    def add(conv_name, conv_meth):
-        zconv.func_dict[conv_name] = conv_meth.__func__
-
-    @staticmethod  
-    def get_zconv(plot_type):
-        sf = zconv.func_dict.get(plot_type)
-        return sf()
         
     def swrcalc(z_list):
         y = []        
@@ -66,19 +48,33 @@ class zconv:
             G = (z - 50) / (z + 50)
             out = (1 + np.abs(G))/(1-np.abs(G))
             y.append(out) 
-        return y
+        return y    
+        
+    @staticmethod 
+    def plottypes():
+        return list(zconv.func_dict.keys())       
+  
+    @classmethod  
+    def add(cls, conv_name, conv_meth):
+        zconv.func_dict[conv_name] = conv_meth
+
+    @staticmethod  
+    def get_zconv(plot_type):
+        sf = zconv.func_dict.get(plot_type)
+        return sf()
     
-    
-    func_dict = {'Magnitude': absplot.__func__, 'Real': realplot.__func__, 'Imaginary': imagplot.__func__, 'SWR': swrplot.__func__}   
+    func_dict = {'Magnitude': absplot, 'Real': realplot, 'Imaginary': imagplot, 'SWR': swrplot}    
+  
         
 class sweepobj:
     def __init__(self, sn, bt, eln):
         
         sweep = PZT.objects.get(SN=sn).sweep_set.all().get(eln=eln, band_type=bt) 
-        
+   
         ReZ =  eval(sweep.ReZ)
         ImZ =  eval(sweep.ImZ)
-        Freq = eval(sweep.Freq)    
+        Freq = eval(sweep.Freq) 
+        
         Freq = np.array(Freq)
         ImZ =  np.array(ImZ)
         ReZ =  np.array(ReZ)    
@@ -90,8 +86,7 @@ class sweepobj:
         
         self.Z = np.array( ReZ + 1j*ImZ).astype('complex')
         self.Freq = Freq / 10**6   
-        
-
+ 
         
 class plotobj:
     def __init__(self):
@@ -108,7 +103,7 @@ class plotobj:
         
     def plot(self, plot_type, save_type, autoscale = False):
  
-        convfunc, self.ylim, self.ylabel, self.title = zconv.get_zconv(plot_type=plot_type)
+        convfunc, self.ylim, self.ylabel, self.title = zconv.get_zconv(plot_type)
        
         fig, ax = plt.subplots(ncols=1,nrows=1)
         
@@ -136,11 +131,3 @@ class plotobj:
         else:
             fig.savefig("test.png")            
             plt.show()         
-
-        # elif save_type == "b64_raw":
-            # image = BytesIO()
-            # fig.savefig(image, format="png")
-            # image.seek(0)
-            # str = base64.b64encode(image.read())
-            # plt.close()
-            # return str.decode('utf8')  
