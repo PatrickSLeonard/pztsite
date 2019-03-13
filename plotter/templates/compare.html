@@ -1,178 +1,138 @@
-
+{% load static %}
 <!DOCTYPE html>
-
-<style type="text/css" media="screen">
-table.blueTable {
-  border: 1px solid #1C6EA4;
-  background-color: #EEEEEE;
-  width: 25%;
-  text-align: left;
-  border-collapse: collapse;
-}
-table.blueTable td, table.blueTable th {
-  border: 1px solid #AAAAAA;
-  padding: 3px 2px;
-}
-table.blueTable tbody td {
-  font-size: 13px;
-}
-table.blueTable tr:nth-child(even) {
-  background: #D0E4F5;
-}
-table.blueTable thead {
-  background: #1C6EA4;
-  background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-  background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-  background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-  border-bottom: 2px solid #444444;
-}
-table.blueTable thead th {
-  font-size: 15px;
-  font-weight: bold;
-  color: #FFFFFF;
-  border-left: 2px solid #D0E4F5;
-}
-table.blueTable thead th:first-child {
-  border-left: none;
-}
-
-table.blueTable tfoot {
-  font-size: 14px;
-  font-weight: bold;
-  color: #FFFFFF;
-  background: #D0E4F5;
-  background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-  background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-  background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
-  border-top: 2px solid #444444;
-}
-table.blueTable tfoot td {
-  font-size: 14px;
-}
-table.blueTable tfoot .links {
-  text-align: right;
-}
-table.blueTable tfoot .links a{
-  display: inline-block;
-  background: #1C6EA4;
-  color: #FFFFFF;
-  padding: 2px 8px;
-  border-radius: 5px;
-}
-
-</style>
-
 
 
 <html lang="en">
-<html>
-<head>
-<title> Select Page </title>
-</head>
-
-<body onload="RedrawPlot()">
-
-
-{% block testjava %}
-<script type="text/javascript">
-
-
-function RedrawPlot() {
-    var baseurl = window.location.origin;
-    var url = baseurl + "/plotter/image/"
+	<head>
+		<meta charset="utf-8">
+		<title>PZT Compare</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="Description" lang="en" content="Element Comparison App">
+		<meta name="Patrick Leonard" content="just doing this for fun">
+		<meta name="robots" content="index, follow">
+		
+		<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+	</head>
+	<body onload="RedrawPlot()">
     
-
-    {% for q in range %}
     
-    var e = document.getElementById("sn_dropdown{{q}}");
-    var sn{{q}} = e.options[e.selectedIndex].value;
     
-    var e = document.getElementById("bt_dropdown{{q}}");
-    var bt{{q}} = e.options[e.selectedIndex].value; 
+    {% block testjava %}
+        <script type="text/javascript">
+
+
+        function RedrawPlot() {
+            var baseurl = window.location.origin;
+            var url = baseurl + "/plotter/image/"
+            
+
+            {% for q in range %}
+            
+            var e = document.getElementById("sn_dropdown{{q}}");
+            var sn{{q}} = e.options[e.selectedIndex].value;
+            
+            var e = document.getElementById("bt_dropdown{{q}}");
+            var bt{{q}} = e.options[e.selectedIndex].value; 
+            
+            var e = document.getElementById("eln_dropdown{{q}}");
+            var eln{{q}} = e.options[e.selectedIndex].value - 1;
+
+            
+            url = url + sn{{q}} + bt{{q}} + eln{{q}} + "/"
+         
+            {% endfor %}
+
+            var e = document.getElementById("ptype_dropdown");
+            var ptype = e.options[e.selectedIndex].value;     
+            url = url + ptype
+
+         
+            document.getElementById("permalink").href = url
+            document.getElementById("image").src = url
+            
+
+
+        }
+
+        </script>
+    {% endblock %}
     
-    var e = document.getElementById("eln_dropdown{{q}}");
-    var eln{{q}} = e.options[e.selectedIndex].value - 1;
-
     
-    url = url + sn{{q}} + bt{{q}} + eln{{q}} + "/"
- 
-    {% endfor %}
-
-    var e = document.getElementById("ptype_dropdown");
-    var ptype = e.options[e.selectedIndex].value;     
-    url = url + ptype
-
- 
-    document.getElementById("permalink").href = url
-    document.getElementById("image").src = url
     
+		<div class="container">
+			<div class="header">
+				<h1 class="header-heading">Trace Compare</h1>
+			</div>
+			
+			<div class="content">
+				<div class="main">
+
+                    <h3> Select elements to compare: </h3>
+                
+                    <form name="plotform">
+                        <table class="table">
+                        <thead>
+                        <tr>
+                        <th class="header_main">S/N</th>
+                        <th class="header_main">Band</th>
+                        <th class="header_main">Element</th>
+                        <th class="header_main">Plot Type</th>
+                        </tr>
+                        </thead>
+                        {% for q in range %}
+                        <tbody>
+                        <tr>
+                        <td><select id="sn_dropdown{{q}}" onchange="RedrawPlot()">
+                            {% for pzt in all_pzts %}
+                                <option value="{{ pzt.SN }}">{{ pzt.SN }}</option>
+                            {% endfor %}
+                        </select></td>
+                        <td>
+                        <select id="bt_dropdown{{q}}" onchange="RedrawPlot()">   
+                                <option value="L">Low</option>
+                                <option value="H">High</option>
+                        </select></td>
+                        <td><select id="eln_dropdown{{q}}" onchange="RedrawPlot()">
+                            {% for i in i|rjust:10 %}
+                                <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                            {% endfor %}
+                        </select></td>
+
+                        {% if forloop.first %}
+                        <td><select id="ptype_dropdown" onchange="RedrawPlot()">
+                            {% for p in ptype_list %}
+                                <option value="{{ p }}">{{ p }}</option>
+                            {% endfor %}
+                        </select>
+                        </td>
+                        {% endif %}
+
+                        </tr>
+                        </tbody>
+                        {% endfor %}
+
+                        </table>
+                    </form>
+					
+                    <center>
+                    <a href='/plotter/html/{{count|add:"1"}}' class="btn">ADD</a>
+                    <a href='/plotter/html/{{count|add:"-1"}}' class="btn">REMOVE</a>
+                   </center>
+					
+                    <img id="image" name="image" src="" alt="" class="img_format"/>					
+                    
+                    
+                    <center>    
+                    <a href="" id="permalink" class="btn">PERMALINK</a>
+                    </center>
+                   
 
 
-}
-
-</script>
-{% endblock %}
-<h2> Comparison Page </h2>
-<hr>
-
-
-<form name="plotform">
-<table class="blueTable">
-<thead>
-<tr>
-<th>S/N</th>
-<th>Band</th>
-<th>Element</th>
-<th>Plot Type</th>
-</tr>
-</thead>
-
-
-
-{% for q in range %}
-<tbody>
-<tr>
-<td><select id="sn_dropdown{{q}}" onchange="RedrawPlot()">
-    {% for pzt in all_pzts %}
-        <option value="{{ pzt.SN }}">{{ pzt.SN }}</option>
-    {% endfor %}
-</select></td>
-<td>
-<select id="bt_dropdown{{q}}" onchange="RedrawPlot()">   
-        <option value="L">Low</option>
-        <option value="H">High</option>
-</select></td>
-<td><select id="eln_dropdown{{q}}" onchange="RedrawPlot()">
-    {% for i in i|rjust:10 %}
-        <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
-    {% endfor %}
-</select></td>
-
-{% if forloop.first %}
-<td><select id="ptype_dropdown" onchange="RedrawPlot()">
-    {% for p in ptype_list %}
-        <option value="{{ p }}">{{ p }}</option>
-    {% endfor %}
-</select>
-</td>
-{% endif %}
-
-</tr>
-</tbody>
-{% endfor %}
-
-</table>
-</form>
-
-
-<a href='/plotter/compare/{{count|add:"1"}}'>ADD</a> | <a href='/plotter/compare/{{count|add:"-1"}}'>REMOVE</a>
-<br>
-<hr>
-<a href="" id="permalink">PERMALINK</a>
-<hr>
-<img id="image" name="image" src=""/>
-
-</body>
+				</div>
+			</div>
+			<div class="footer">
+				&copy; Copyright 2019
+			</div>
+		</div>
+	</body>
 </html>
-
-
