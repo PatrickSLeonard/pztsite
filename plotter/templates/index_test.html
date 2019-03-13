@@ -13,7 +13,7 @@
 
 
 		<!-- Override CSS file - add your own CSS rules -->
-		<link rel="stylesheet" href="/static/css/styles.css">
+		<link rel="stylesheet" href="{% static 'css/styles.css' %}">
 	</head>
 	<body onload="RedrawPlot()">
     
@@ -124,9 +124,9 @@
                     <img id="image" name="image" src="" alt="" class="img_format"/>					
                     
                     
-                    <div class="permalink"> 
-                        <a href="" id="permalink">[PERMALINK]</a>
-                    </div>
+                    <center>    
+                    <a href="" id="permalink" class="btn">PERMALINK</a>
+                    </center>
                    
 
 

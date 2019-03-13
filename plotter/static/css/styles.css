@@ -1,3 +1,5 @@
+{% load static %}
+
 /* -----------------------
 Base styles
 ------------------------*/
@@ -9,6 +11,7 @@ body
 	color: #333;
 	background-color: #eee;
 	font: 1em/1.2 "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
+    background-image: url('/static/subtle_white_feathers_@2X.png')
 }
 
 h1,h2,h3,h4,h5,h6
@@ -77,8 +80,9 @@ Layout styles
 .container
 {
 	max-width: 50em;
-	margin: 0 auto;
+	margin: 10px auto;
 	background-color: #fff;
+    border: 2px solid transparent;
 }
 
 .header
@@ -171,6 +175,9 @@ Single styles
   margin-left: auto;
   margin-right: auto;
   width: auto;
+  border: 1px solid transparent;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 .btn
