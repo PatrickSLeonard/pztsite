@@ -33,7 +33,7 @@ urlpatterns = [
     #http://127.0.0.1:8000/plotter/html/list_of_elements
     re_path(r'^html/(?P<estr>.*)', views.testview, name='testview'),
     
-    #http://127.0.0.1:8000/plotter/image//list_of_elements
+    #http://127.0.0.1:8000/plotter/image/list_of_elements
     re_path(r'^image/(?P<estr>.*)', views.imageview, name='imageview'),    
     
 ]

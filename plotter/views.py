@@ -59,9 +59,12 @@ def imageview(request, estr):
     
 def testview(request, estr):
 
-    url_str = '/plotter/image/{}'.format(estr)
-    context = {'img_url': url_str}
-    return render(request, 'test.html', context=context)   
+    count = int(estr)
+    all_pzts = PZT.objects.all()
+    ptype_list = zconv.plottypes()
+    context = {'all_pzts': all_pzts, 'ptype_list': ptype_list, 'count': count, 'range': range(count)}
+    
+    return render(request, 'index_test.html', context=context)   
 
 
 # *********************************************
@@ -71,7 +74,6 @@ def html_compare (request, count):
     count = int(count)
     all_pzts = PZT.objects.all()
     ptype_list = zconv.plottypes()
-#    context = {'all_pzts': all_pzts, 'ptype_list': ptype_list, 'count': range(count)}   
     context = {'all_pzts': all_pzts, 'ptype_list': ptype_list, 'count': count, 'range': range(count)}
     return render(request, 'compare.html', context=context)
 

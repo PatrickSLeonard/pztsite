@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>PZT Compare</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="Description" lang="en" content="Element Comparison App">
+		<meta name="Patrick Leonard" content="just doing this for fun">
+		<meta name="robots" content="index, follow">
+
+
+		<!-- Override CSS file - add your own CSS rules -->
+		<link rel="stylesheet" href="/static/css/styles.css">
+	</head>
+	<body onload="RedrawPlot()">
+    
+    
+    
+    {% block testjava %}
+        <script type="text/javascript">
+
+
+        function RedrawPlot() {
+            var baseurl = window.location.origin;
+            var url = baseurl + "/plotter/image/"
+            
+
+            {% for q in range %}
+            
+            var e = document.getElementById("sn_dropdown{{q}}");
+            var sn{{q}} = e.options[e.selectedIndex].value;
+            
+            var e = document.getElementById("bt_dropdown{{q}}");
+            var bt{{q}} = e.options[e.selectedIndex].value; 
+            
+            var e = document.getElementById("eln_dropdown{{q}}");
+            var eln{{q}} = e.options[e.selectedIndex].value - 1;
+
+            
+            url = url + sn{{q}} + bt{{q}} + eln{{q}} + "/"
+         
+            {% endfor %}
+
+            var e = document.getElementById("ptype_dropdown");
+            var ptype = e.options[e.selectedIndex].value;     
+            url = url + ptype
+
+         
+            document.getElementById("permalink").href = url
+            document.getElementById("image").src = url
+            
+
+
+        }
+
+        </script>
+    {% endblock %}
+    
+    
+    
+		<div class="container">
+			<div class="header">
+				<h1 class="header-heading">Trace Compare</h1>
+			</div>
+			
+			<div class="content">
+				<div class="main">
+
+                    <h3> Select elements to compare: </h3>
+                
+                    <form name="plotform">
+                        <table class="table">
+                        <thead>
+                        <tr>
+                        <th class="header_main">S/N</th>
+                        <th class="header_main">Band</th>
+                        <th class="header_main">Element</th>
+                        <th class="header_main">Plot Type</th>
+                        </tr>
+                        </thead>
+                        {% for q in range %}
+                        <tbody>
+                        <tr>
+                        <td><select id="sn_dropdown{{q}}" onchange="RedrawPlot()">
+                            {% for pzt in all_pzts %}
+                                <option value="{{ pzt.SN }}">{{ pzt.SN }}</option>
+                            {% endfor %}
+                        </select></td>
+                        <td>
+                        <select id="bt_dropdown{{q}}" onchange="RedrawPlot()">   
+                                <option value="L">Low</option>
+                                <option value="H">High</option>
+                        </select></td>
+                        <td><select id="eln_dropdown{{q}}" onchange="RedrawPlot()">
+                            {% for i in i|rjust:10 %}
+                                <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                            {% endfor %}
+                        </select></td>
+
+                        {% if forloop.first %}
+                        <td><select id="ptype_dropdown" onchange="RedrawPlot()">
+                            {% for p in ptype_list %}
+                                <option value="{{ p }}">{{ p }}</option>
+                            {% endfor %}
+                        </select>
+                        </td>
+                        {% endif %}
+
+                        </tr>
+                        </tbody>
+                        {% endfor %}
+
+                        </table>
+                    </form>
+					
+                    <center>
+                    <a href='/plotter/html/{{count|add:"1"}}' class="btn">ADD</a>
+                    <a href='/plotter/html/{{count|add:"-1"}}' class="btn">REMOVE</a>
+                   </center>
+					
+                    <img id="image" name="image" src="" alt="" class="img_format"/>					
+                    
+                    
+                    <div class="permalink"> 
+                        <a href="" id="permalink">[PERMALINK]</a>
+                    </div>
+                   
+
+
+				</div>
+			</div>
+			<div class="footer">
+				&copy; Copyright 2019
+			</div>
+		</div>
+	</body>
+</html>

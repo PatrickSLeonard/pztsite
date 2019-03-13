@@ -81,7 +81,7 @@ function RedrawPlot() {
     var baseurl = window.location.origin;
     var url = baseurl + "/plotter/image/"
     
-        
+
     {% for q in range %}
     
     var e = document.getElementById("sn_dropdown{{q}}");
@@ -103,7 +103,7 @@ function RedrawPlot() {
     url = url + ptype
 
  
-    document.getElementById("demo").innerHTML = url
+    document.getElementById("permalink").href = url
     document.getElementById("image").src = url
     
 
@@ -164,11 +164,11 @@ function RedrawPlot() {
 </table>
 </form>
 
-<br>
+
 <a href='/plotter/compare/{{count|add:"1"}}'>ADD</a> | <a href='/plotter/compare/{{count|add:"-1"}}'>REMOVE</a>
 <br>
-
-<p id="demo">test url</p>
+<hr>
+<a href="" id="permalink">PERMALINK</a>
 <hr>
 <img id="image" name="image" src=""/>
 
